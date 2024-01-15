@@ -8,16 +8,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "regions")
+@Table(name = "inventories")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Region implements Serializable {
+public class Inventory implements Serializable {
     @Id
     @GeneratedValue
     private UUID id;
@@ -25,6 +26,35 @@ public class Region implements Serializable {
     @NotEmpty
     @Column(name = "name")
     private String name;
+
+    @NotEmpty
+    @Column(name = "size")
+    private String size;
+
+    @NotEmpty
+    @Column(name = "location")
+    private String location;
+
+    @NotEmpty
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "img_url")
+    private String imgUrl;
+
+    @NotEmpty
+    @Column(name = "price")
+    private BigDecimal price;
+
+    @Column(name = "type")
+    private String type;
+
+    @Column(name = "face")
+    private String face;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     @Column(name = "status")
     private Integer status = 1;
@@ -44,4 +74,5 @@ public class Region implements Serializable {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
 }

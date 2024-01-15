@@ -12,12 +12,12 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "regions")
+@Table(name = "districts")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Region implements Serializable {
+public class District implements Serializable {
     @Id
     @GeneratedValue
     private UUID id;
@@ -25,6 +25,10 @@ public class Region implements Serializable {
     @NotEmpty
     @Column(name = "name")
     private String name;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "region_id", referencedColumnName = "id")
+    private Region region;
 
     @Column(name = "status")
     private Integer status = 1;

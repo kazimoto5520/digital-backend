@@ -31,8 +31,12 @@ public class Company implements Serializable {
     private String phone;
 
     @NotEmpty
-    @Column(name = "email")
+    @Column(name = "email" ,unique = true)
     private String email;
+
+    @NotEmpty
+    @Column(name = "password")
+    private String password;
 
     @NotEmpty
     @Column(name = "tin_number")
@@ -48,8 +52,13 @@ public class Company implements Serializable {
     @Column(name = "img_url")
     private String imgUrl;
 
-    @OneToOne(mappedBy = "company", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "region_id")
     private Region region;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "district_id")
+    private District district;
 
     @Column(name = "status")
     private Integer status = 1;
