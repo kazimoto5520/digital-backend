@@ -2,6 +2,7 @@ package com.kazimoto.digitalbackend.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Entity
 @Table(name = "companies")
@@ -17,24 +17,26 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Company implements Serializable {
+public class Company{
     @Id
-    @GeneratedValue
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @NotEmpty
+    @NotEmpty(message = "Company name should not be empty")
     @Column(name = "name")
     private String name;
 
-    @NotEmpty
+    @NotEmpty(message = "Phone number should not be empty")
+    @Size(min = 12, max = 12)
     @Column(name = "phone")
     private String phone;
 
-    @NotEmpty
+    @NotEmpty(message = "Email should not be empty")
     @Column(name = "email" ,unique = true)
     private String email;
 
-    @NotEmpty
+    @NotEmpty(message = "Password should not be empty")
+    @Size(min = 6, max = 25)
     @Column(name = "password")
     private String password;
 
@@ -52,11 +54,11 @@ public class Company implements Serializable {
     @Column(name = "img_url")
     private String imgUrl;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "region_id")
     private Region region;
 
-    @ManyToOne(optional = false)
+    @ManyToOne
     @JoinColumn(name = "district_id")
     private District district;
 
