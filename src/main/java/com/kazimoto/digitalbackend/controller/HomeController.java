@@ -84,7 +84,9 @@ public class HomeController {
             Region savedRegion = regionService.saveRegion(region);
             return ResponseEntity.status(CREATED).body(savedRegion);
         } catch (Exception e) {
-            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body("Error saving region: " + e.getMessage());
+            Map<String, String> response = new HashMap<>();
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(response);
         }
     }
 
@@ -163,6 +165,18 @@ public class HomeController {
             Map<String, String> error = new HashMap<>();
             error.put("message", e.getMessage());
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
+
+    @GetMapping("/districts/{id}")
+    public ResponseEntity<?> getSingleDistrict(@PathVariable(name = "id") Long id) {
+        try {
+            DistrictResponseDto district = districtService.getSingleDistrict(id);
+            return ResponseEntity.status(OK).body(district);
+        } catch (NoSuchElementException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(NOT_FOUND).body(response);
         }
     }
 

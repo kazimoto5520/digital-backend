@@ -35,6 +35,7 @@ public class DistrictServiceImpl implements DistrictService {
         return districts.stream()
                 .map(district -> {
                     DistrictResponseDto responseDto = new DistrictResponseDto();
+                    responseDto.setId(district.getId());
                     responseDto.setDistrictName(district.getName());
                     responseDto.setRegionName(district.getRegion().getName());
                     responseDto.setStatus(district.getStatus());
@@ -59,22 +60,37 @@ public class DistrictServiceImpl implements DistrictService {
         log.info("District Name: {}", newDistrict.getName());
         log.info("Region Name: {}", newDistrict.getRegion());
 
-        District savedDistrict =  districtRepository.save(newDistrict);
+        if (districtRepository.existsByNameAndRegion(dto.getDistrictName(), region)){
+            throw new RuntimeException(dto.getDistrictName() + " already exists in " + region.getName());
+        }
+        District savedDistrict = districtRepository.save(newDistrict);
 
         DistrictResponseDto district = new DistrictResponseDto();
+        district.setId(savedDistrict.getId());
         district.setDistrictName(savedDistrict.getName());
         district.setRegionName(savedDistrict.getRegion().getName());
         district.setStatus(savedDistrict.getStatus());
-        district.setCreatedAt(savedDistrict.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_TIME));
+        district.setCreatedAt(savedDistrict.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE));
         district.setUpdatedAt(savedDistrict
-                .getUpdatedAt() != null ? savedDistrict.getUpdatedAt().format(DateTimeFormatter.ISO_LOCAL_TIME) : null);
+                .getUpdatedAt() != null ? savedDistrict.getUpdatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE) : null);
 
         return district;
     }
 
     @Override
-    public District getSingleDistrict(Long id) {
-        return null;
+    public DistrictResponseDto getSingleDistrict(Long id) {
+        District district = districtRepository
+                .findById(id).orElseThrow(() -> new NoSuchElementException("District not found"));
+
+        DistrictResponseDto responseDto = new DistrictResponseDto();
+        responseDto.setId(district.getId());
+        responseDto.setDistrictName(district.getName());
+        responseDto.setRegionName(district.getRegion().getName());
+        responseDto.setStatus(district.getStatus());
+        responseDto.setCreatedAt(district.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE));
+        responseDto.setUpdatedAt(district
+                .getUpdatedAt() != null ? district.getUpdatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE) : null);
+        return responseDto;
     }
 
     @Override

@@ -27,6 +27,10 @@ public class RegionServiceImpl implements RegionService {
 
     @Override
     public Region saveRegion(RegionDto region) {
+        if (regionRepository.existsByName(region.getRegionName())) {
+            throw new RuntimeException(region.getRegionName() + " already exists");
+        }
+
         Region newRegion = new Region();
         newRegion.setName(region.getRegionName());
         newRegion.setId(region.getRegionId());

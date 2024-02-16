@@ -14,7 +14,7 @@ public interface DistrictService {
 
     DistrictResponseDto saveDistrict(DistrictDto dto);
 
-    District getSingleDistrict(Long id);
+    DistrictResponseDto getSingleDistrict(Long id);
 
     District updateDistrict(Long id, DistrictDto dto);
 

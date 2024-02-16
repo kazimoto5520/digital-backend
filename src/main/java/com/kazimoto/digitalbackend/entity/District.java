@@ -24,7 +24,7 @@ public class District{
     @Column(name = "name")
     private String name;
 
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "region_id", referencedColumnName = "id")
     private Region region;
 
