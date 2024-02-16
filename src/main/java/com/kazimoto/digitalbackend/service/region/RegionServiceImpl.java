@@ -1,14 +1,19 @@
 package com.kazimoto.digitalbackend.service.region;
 
+import com.kazimoto.digitalbackend.dto.RegionDto;
 import com.kazimoto.digitalbackend.entity.Region;
 import com.kazimoto.digitalbackend.repository.RegionRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 
 @Service
-public class RegionServiceImpl implements RegionService{
+@Slf4j
+public class RegionServiceImpl implements RegionService {
     public final RegionRepository regionRepository;
 
     public RegionServiceImpl(RegionRepository regionRepository) {
@@ -21,27 +26,39 @@ public class RegionServiceImpl implements RegionService{
     }
 
     @Override
-    public Region saveRegion(Region region) {
-        Region savedRegion = new Region();
-        savedRegion.setName(region.getName());
-        return regionRepository.save(savedRegion);
+    public Region saveRegion(RegionDto region) {
+        Region newRegion = new Region();
+        newRegion.setName(region.getRegionName());
+        newRegion.setId(region.getRegionId());
+        log.info("Region Name: {}", newRegion.getName());
+        log.info("Region ID: {}", newRegion.getId());
+        return regionRepository.save(newRegion);
     }
 
     @Override
     public Region getSingleRegion(Long id) {
-        return regionRepository.findById(id).orElseThrow();
+        log.info("Getting single region with id {}", id);
+        return regionRepository.findById(id).orElseThrow(() -> new NoSuchElementException("No region with id " + id));
     }
 
     @Override
-    public Region updateRegion(Long id, Region region) {
-        Region existedRegion = regionRepository.findById(id).orElse(null);
+    public Region updateRegion(Long id, RegionDto region) {
+        Region existedRegion = regionRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Region does not exist"));
 
-        if (existedRegion != null){
-            existedRegion.setName(region.getName());
-            return regionRepository.save(existedRegion);
-        }else {
-            return null;
-        }
+        log.info("Region found: {}", existedRegion.getName());
+
+        existedRegion.setName(region.getRegionName());
+        existedRegion.setStatus(Integer.valueOf(region.getStatus()));
+        log.info("Name update {}", existedRegion.getName());
+        return regionRepository.save(existedRegion);
+    }
+
+    @Override
+    public void deleteRegion(Long id) {
+        Region regionToDeleted =
+                regionRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Region does not exist"));
+
+        regionRepository.delete(regionToDeleted);
     }
 
 }

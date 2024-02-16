@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "customers")
@@ -42,9 +44,8 @@ public class Customer {
     @Column(name = "contact_person_email")
     private String contactPersonEmail;
 
-    @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
+    @ManyToMany(mappedBy = "customers")
+    private Set<Company> companies = new HashSet<>();
 
     @Column(name = "status")
     private Integer status = 1;

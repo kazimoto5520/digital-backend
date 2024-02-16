@@ -1,6 +1,7 @@
 package com.kazimoto.digitalbackend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "companies")
@@ -32,6 +35,7 @@ public class Company{
     private String phone;
 
     @NotEmpty(message = "Email should not be empty")
+    @Email
     @Column(name = "email" ,unique = true)
     private String email;
 
@@ -54,11 +58,19 @@ public class Company{
     @Column(name = "img_url")
     private String imgUrl;
 
-    @ManyToOne
+    @ManyToMany
+    @JoinTable(
+            name = "company_customers",
+            joinColumns = @JoinColumn(name = "company_id"),
+            inverseJoinColumns = @JoinColumn(name = "customer_id")
+    )
+    private Set<Customer> customers = new HashSet<>();
+
+    @OneToOne
     @JoinColumn(name = "region_id")
     private Region region;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name = "district_id")
     private District district;
 
