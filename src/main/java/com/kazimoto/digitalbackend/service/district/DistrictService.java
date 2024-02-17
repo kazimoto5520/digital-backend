@@ -16,7 +16,7 @@ public interface DistrictService {
 
     DistrictResponseDto getSingleDistrict(Long id);
 
-    District updateDistrict(Long id, DistrictDto dto);
+    DistrictResponseDto updateDistrict(Long id, DistrictDto dto);
 
     void deleteDistrict(Long id);
 }

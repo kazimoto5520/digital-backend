@@ -94,12 +94,36 @@ public class DistrictServiceImpl implements DistrictService {
     }
 
     @Override
-    public District updateDistrict(Long id, DistrictDto dto) {
-        return null;
+    public DistrictResponseDto updateDistrict(Long id, DistrictDto dto) {
+        Region region = regionRepository.findById(dto.getRegionId())
+                .orElseThrow(() -> new NoSuchElementException("Region not found with ID: " + dto.getRegionId()));
+
+        District district = districtRepository
+                .findById(id).orElseThrow(() -> new NoSuchElementException("District not found"));
+
+        district.setName(dto.getDistrictName());
+        district.setRegion(region);
+        district.setStatus(dto.getStatus());
+
+        District updatedDistrict = districtRepository.save(district);
+
+        DistrictResponseDto responseDto = new DistrictResponseDto();
+        responseDto.setId(updatedDistrict.getId());
+        responseDto.setDistrictName(updatedDistrict.getName());
+        responseDto.setRegionName(updatedDistrict.getRegion().getName());
+        responseDto.setStatus(updatedDistrict.getStatus());
+        responseDto.setCreatedAt(updatedDistrict.getCreatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE));
+        responseDto.setUpdatedAt(updatedDistrict
+                .getUpdatedAt() != null ? updatedDistrict.getUpdatedAt().format(DateTimeFormatter.ISO_LOCAL_DATE) : null);
+
+        return responseDto;
     }
 
     @Override
     public void deleteDistrict(Long id) {
+        District district = districtRepository
+                .findById(id).orElseThrow(() -> new NoSuchElementException("District not found"));
 
+        districtRepository.delete(district);
     }
 }

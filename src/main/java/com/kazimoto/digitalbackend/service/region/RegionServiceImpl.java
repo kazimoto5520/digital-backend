@@ -1,6 +1,7 @@
 package com.kazimoto.digitalbackend.service.region;
 
 import com.kazimoto.digitalbackend.dto.RegionDto;
+import com.kazimoto.digitalbackend.entity.District;
 import com.kazimoto.digitalbackend.entity.Region;
 import com.kazimoto.digitalbackend.repository.RegionRepository;
 import lombok.extern.slf4j.Slf4j;

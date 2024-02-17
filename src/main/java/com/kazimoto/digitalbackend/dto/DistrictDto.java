@@ -12,4 +12,5 @@ public class DistrictDto {
     private String districtName;
     @NonNull
     private Long regionId;
+    private Integer status = 1;
 }

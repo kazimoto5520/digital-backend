@@ -180,4 +180,34 @@ public class HomeController {
         }
     }
 
+    @PutMapping("/districts/update/{id}")
+    public ResponseEntity<?> updateDistrict(@PathVariable(name = "id") Long id, @Valid @RequestBody DistrictDto dto) {
+        try {
+            DistrictResponseDto district = districtService.updateDistrict(id, dto);
+            return ResponseEntity.status(CREATED).body(district);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(NOT_FOUND).body(response);
+        }
+    }
+
+    @DeleteMapping("/districts/delete/{id}")
+    public ResponseEntity<?> deleteDistrict(@PathVariable(name = "id") Long id) {
+        try {
+            districtService.deleteDistrict(id);
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "District deleted");
+            return ResponseEntity.ok(response);
+        } catch (NoSuchElementException e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "District with ID " + id + " not found.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse);
+        } catch (Exception e) {
+            Map<String, String> errorResponse = new HashMap<>();
+            errorResponse.put("error", "Error updating district: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
 }
