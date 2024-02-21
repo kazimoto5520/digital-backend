@@ -58,13 +58,13 @@ public class Company{
     @Column(name = "img_url")
     private String imgUrl;
 
-    @ManyToMany
+    /*@ManyToMany
     @JoinTable(
             name = "company_customers",
             joinColumns = @JoinColumn(name = "company_id"),
             inverseJoinColumns = @JoinColumn(name = "customer_id")
     )
-    private Set<Customer> customers = new HashSet<>();
+    private Set<Customer> customers = new HashSet<>();*/
 
     @OneToOne
     @JoinColumn(name = "region_id")
