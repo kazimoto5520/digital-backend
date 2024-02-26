@@ -31,6 +31,7 @@ import static org.springframework.http.HttpStatus.*;
 @RequestMapping("/api")
 @RequiredArgsConstructor
 @Slf4j
+@CrossOrigin(origins = "http://localhost:3000/")
 public class HomeController {
 
     private final CompanyService companyService;
