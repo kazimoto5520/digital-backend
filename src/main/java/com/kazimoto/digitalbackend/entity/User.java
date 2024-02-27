@@ -1,17 +1,20 @@
 package com.kazimoto.digitalbackend.entity;
 
-import com.kazimoto.digitalbackend.enums.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Data
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 @Table(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +33,7 @@ public class User implements UserDetails {
     private String fullName;
 
     @NotEmpty
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @NotEmpty
@@ -41,11 +45,11 @@ public class User implements UserDetails {
     @Column(name = "phone")
     private String phone;
 
-    @NotEmpty
+//    @NotEmpty
     @Column(name = "tin_number")
     private String tinNumber;
 
-    @NotEmpty
+//    @NotEmpty
     @Column(name = "domain_url")
     private String domainUrl;
 
@@ -74,8 +78,12 @@ public class User implements UserDetails {
     @Column(name = "status")
     private Integer status = 1;
 
-    @Enumerated(EnumType.STRING)
-    private List<Role> roles = new ArrayList<>();
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "role_user", joinColumns = {
+            @JoinColumn(name = "user_id", referencedColumnName = "id")
+    }, inverseJoinColumns = {
+            @JoinColumn(name = "role_id", referencedColumnName = "id")})
+    private List<Role> roles;
 
     private boolean isAccountNonExpired = true;
     private boolean isAccountNonLocked = true;
@@ -85,7 +93,7 @@ public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.name()))
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
                 .collect(Collectors.toList());
     }
 
