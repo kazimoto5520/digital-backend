@@ -5,6 +5,7 @@ import com.kazimoto.digitalbackend.entity.Role;
 import com.kazimoto.digitalbackend.entity.User;
 import com.kazimoto.digitalbackend.repository.RoleRepository;
 import com.kazimoto.digitalbackend.repository.UserRepository;
+import com.kazimoto.digitalbackend.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -13,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +26,7 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
+    private final RefreshTokenService refreshTokenService;
 
 
     public AuthResponse register(RegisterRequest request){
@@ -52,9 +53,11 @@ public class LoginService {
         userRepository.save(user);
 
         var jwtToken = jwtService.generateToken(user);
+        var refreshToken = refreshTokenService.createRefreshToken(user.getEmail());
 
         return AuthResponse.builder()
-                .token(jwtToken)
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken.getRefreshToken())
                 .build();
     }
 
@@ -70,13 +73,16 @@ public class LoginService {
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new RuntimeException("No user found by email " + request.getEmail()));
 
         log.info("The user is {}", user);
+        log.info("Role: {}", user.getAuthorities());
 
         var token = jwtService.generateToken(user);
+        var refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
 
         log.info("The token is {}", token);
 
         return AuthResponse.builder()
-                .token(token)
+                .accessToken(token)
+                .refreshToken(refreshToken.getRefreshToken())
                 .build();
     }
 }

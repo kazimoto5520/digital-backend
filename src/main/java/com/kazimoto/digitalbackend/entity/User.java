@@ -45,11 +45,11 @@ public class User implements UserDetails {
     @Column(name = "phone")
     private String phone;
 
-//    @NotEmpty
+    //    @NotEmpty
     @Column(name = "tin_number")
     private String tinNumber;
 
-//    @NotEmpty
+    //    @NotEmpty
     @Column(name = "domain_url")
     private String domainUrl;
 
@@ -78,6 +78,9 @@ public class User implements UserDetails {
     @Column(name = "status")
     private Integer status = 1;
 
+    @OneToOne(mappedBy = "user")
+    private RefreshToken refreshToken;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_user", joinColumns = {
             @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -92,13 +95,20 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        roles.forEach(role -> {
+                    authorities.add(new SimpleGrantedAuthority(role.getName()));
+                    role.getPermissions().forEach(permission -> {
+                        authorities.add(new SimpleGrantedAuthority(permission.getName()));
+                    });
+                }
+        );
+
+        return authorities;
     }
 
     @Override
-    public String getUsername(){
+    public String getUsername() {
         return email;
     }
 

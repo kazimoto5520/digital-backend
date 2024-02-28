@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -28,7 +29,7 @@ import java.util.stream.Collectors;
 import static org.springframework.http.HttpStatus.*;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @Slf4j
 @CrossOrigin(origins = "http://localhost:3000/")
@@ -69,6 +70,7 @@ public class HomeController {
         return ResponseEntity.ok(regions);
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/regions")
     public ResponseEntity<?> saveRegion(@Valid @RequestBody RegionDto region, BindingResult result) {
         if (result.hasErrors()) {
