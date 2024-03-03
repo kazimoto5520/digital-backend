@@ -2,14 +2,11 @@ package com.kazimoto.digitalbackend.auth;
 
 import com.kazimoto.digitalbackend.entity.District;
 import com.kazimoto.digitalbackend.entity.Region;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.List;
 
 @Data
 @Builder
@@ -44,6 +41,6 @@ public class RegisterRequest {
 
     private Integer status = 1;
 
-    private List<@Valid @NotEmpty String> roles;
+    private String roles;
 
 }

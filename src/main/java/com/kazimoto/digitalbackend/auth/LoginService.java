@@ -13,8 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -31,10 +30,7 @@ public class LoginService {
 
     public AuthResponse register(RegisterRequest request){
 
-        List<Role> roles = roleRepository.findAll();
-        List<Role> userRoles = roles.stream()
-                .filter(role -> request.getRoles().contains(role.getName()))
-                .collect(Collectors.toList());
+        Role role = roleRepository.findByName(request.getRoles()).orElseThrow();
 
         var user = User.builder()
                 .email(request.getEmail())
@@ -43,7 +39,7 @@ public class LoginService {
                 .fullName(request.getFullName())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .status(1)
-                .roles(userRoles)
+                .roles(Set.of(role))
                 .isAccountNonLocked(true)
                 .isAccountNonExpired(true)
                 .isCredentialsNonExpired(true)

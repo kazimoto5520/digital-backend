@@ -26,4 +26,5 @@ public class Role {
             @JoinColumn(name = "role_id", referencedColumnName = "id")
     },inverseJoinColumns = {@JoinColumn (name="permission_id", referencedColumnName = "id")})
     private List<Permission> permissions;
+
 }

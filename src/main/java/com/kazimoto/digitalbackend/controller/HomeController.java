@@ -64,13 +64,14 @@ public class HomeController {
         return ResponseEntity.ok(savedCompany);
     }
 
+//    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/regions/all")
     public ResponseEntity<List<Region>> getAllRegions() {
         List<Region> regions = regionService.getAllRegions();
         return ResponseEntity.ok(regions);
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/regions")
     public ResponseEntity<?> saveRegion(@Valid @RequestBody RegionDto region, BindingResult result) {
         if (result.hasErrors()) {

@@ -37,5 +37,11 @@ public class DigitalBackendApplication implements CommandLineRunner {
         role.setStatus(1);
         role.setPermissions(permissions);
         roleRepository.save(role);
+
+        Role role1 = new Role();
+        role.setName("USER");
+        role.setStatus(1);
+        role.setPermissions(permissions);
+        roleRepository.save(role1);
     }
 }
