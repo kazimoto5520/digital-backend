@@ -1,5 +1,8 @@
 package com.kazimoto.digitalbackend.auth;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.kazimoto.digitalbackend.entity.District;
 import com.kazimoto.digitalbackend.entity.Region;
 import jakarta.validation.constraints.Email;
@@ -10,6 +13,8 @@ import lombok.Data;
 
 @Data
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RegisterRequest {
     @NotEmpty(message = "full name should not be empty")
     private String fullName;
@@ -20,20 +25,6 @@ public class RegisterRequest {
 
     @NotEmpty
     private String password;
-
-    @NotEmpty(message = "Phone number should not be empty")
-    @Size(min = 12, max = 12)
-    private String phone;
-
-//    @NotEmpty
-    private String tinNumber;
-
-//    @NotEmpty
-    private String domainUrl;
-
-    private String address;
-
-    private String imgUrl;
 
     private Region region;
 

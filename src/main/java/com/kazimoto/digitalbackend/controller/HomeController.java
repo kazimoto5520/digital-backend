@@ -4,7 +4,6 @@ import com.kazimoto.digitalbackend.dto.DistrictDto;
 import com.kazimoto.digitalbackend.dto.DistrictResponseDto;
 import com.kazimoto.digitalbackend.dto.RegionDto;
 import com.kazimoto.digitalbackend.entity.Company;
-import com.kazimoto.digitalbackend.entity.District;
 import com.kazimoto.digitalbackend.entity.Region;
 import com.kazimoto.digitalbackend.service.company.CompanyService;
 import com.kazimoto.digitalbackend.service.district.DistrictService;
@@ -15,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -64,14 +62,14 @@ public class HomeController {
         return ResponseEntity.ok(savedCompany);
     }
 
-//    @PreAuthorize("hasAuthority('ADMIN')")
+
     @GetMapping("/regions/all")
     public ResponseEntity<List<Region>> getAllRegions() {
         List<Region> regions = regionService.getAllRegions();
         return ResponseEntity.ok(regions);
     }
 
-//    @PreAuthorize("hasAuthority('ADMIN')")
+
     @PostMapping("/regions")
     public ResponseEntity<?> saveRegion(@Valid @RequestBody RegionDto region, BindingResult result) {
         if (result.hasErrors()) {

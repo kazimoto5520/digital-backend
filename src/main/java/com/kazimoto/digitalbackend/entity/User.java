@@ -37,33 +37,6 @@ public class User implements UserDetails {
     @Column(name = "password")
     private String password;
 
-    @NotEmpty(message = "Phone number should not be empty")
-    @Size(min = 12, max = 12)
-    @Column(name = "phone")
-    private String phone;
-
-    //    @NotEmpty
-    @Column(name = "tin_number")
-    private String tinNumber;
-
-    //    @NotEmpty
-    @Column(name = "domain_url")
-    private String domainUrl;
-
-    @Column(name = "address")
-    private String address;
-
-    @Column(name = "img_url")
-    private String imgUrl;
-
-    @ManyToMany
-    @JoinTable(
-            name = "company_customers",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "customer_id")
-    )
-    private Set<Customer> customers = new HashSet<>();
-
     @OneToOne
     @JoinColumn(name = "region_id")
     private Region region;
@@ -78,12 +51,7 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user")
     private RefreshToken refreshToken;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "role_user", joinColumns = {
-            @JoinColumn(name = "user_id", referencedColumnName = "id")
-    }, inverseJoinColumns = {
-            @JoinColumn(name = "role_id", referencedColumnName = "id")})
-    private Set<Role> roles = new HashSet<>();
+    private String roles;
 
     private boolean isAccountNonExpired = true;
     private boolean isAccountNonLocked = true;
@@ -92,9 +60,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
-                .collect(Collectors.toSet());
+        return List.of(new SimpleGrantedAuthority(roles));
     }
 
     @Override

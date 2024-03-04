@@ -44,11 +44,6 @@ public class Customer {
     @Column(name = "contact_person_email")
     private String contactPersonEmail;
 
-    /*@ManyToMany(mappedBy = "customers")
-    private Set<Company> companies = new HashSet<>();*/
-
-    @ManyToMany(mappedBy = "customers")
-    private Set<User> users = new HashSet<>();
 
     @Column(name = "status")
     private Integer status = 1;

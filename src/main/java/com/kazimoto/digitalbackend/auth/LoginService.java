@@ -34,12 +34,10 @@ public class LoginService {
 
         var user = User.builder()
                 .email(request.getEmail())
-                .address(request.getAddress())
-                .phone(request.getPhone())
                 .fullName(request.getFullName())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .status(1)
-                .roles(Set.of(role))
+                .roles(request.getRoles())
                 .isAccountNonLocked(true)
                 .isAccountNonExpired(true)
                 .isCredentialsNonExpired(true)
