@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,7 @@ public class HomeController {
         return ResponseEntity.ok(companies);
     }
 
-    @PostMapping("/companies")
+    @PostMapping(value = "/companies")
     public ResponseEntity<Object> saveCompany(@Valid @RequestBody Company company, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             List<String> errors = bindingResult.getAllErrors()
@@ -63,6 +64,7 @@ public class HomeController {
     }
 
 
+    @PreAuthorize("hasAuthority('VIEW_REGION')")
     @GetMapping("/regions/all")
     public ResponseEntity<List<Region>> getAllRegions() {
         List<Region> regions = regionService.getAllRegions();

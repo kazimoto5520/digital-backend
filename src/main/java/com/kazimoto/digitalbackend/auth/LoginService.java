@@ -13,6 +13,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -30,14 +32,14 @@ public class LoginService {
 
     public AuthResponse register(RegisterRequest request){
 
-        Role role = roleRepository.findByName(request.getRoles()).orElseThrow();
+        List<Role> roles = roleRepository.findAllById(request.getRoleId());
 
         var user = User.builder()
                 .email(request.getEmail())
                 .fullName(request.getFullName())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .status(1)
-                .roles(request.getRoles())
+                .roles(roles)
                 .isAccountNonLocked(true)
                 .isAccountNonExpired(true)
                 .isCredentialsNonExpired(true)
@@ -57,8 +59,7 @@ public class LoginService {
 
 
     public AuthResponse login(AuthRequest request){
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
+        authenticationManager.authenticate(  new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
                 )

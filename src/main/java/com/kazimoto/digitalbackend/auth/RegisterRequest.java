@@ -32,6 +32,6 @@ public class RegisterRequest {
 
     private Integer status = 1;
 
-    private String roles;
+    private Long roleId;
 
 }

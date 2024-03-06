@@ -25,23 +25,22 @@ public class DigitalBackendApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
-        Permission permission = new Permission();
-        permission.setName("MANAGE REGIONS");
-        permission.setStatus(1);
-        permissionRepository.save(permission);
-
-        List<Permission> permissions = permissionRepository.findAll();
-
+//        Permission permission = new Permission();
+//        permission.setName("MANAGE REGIONS");
+//        permission.setStatus(1);
+//        permissionRepository.save(permission);
+//
+//        List<Permission> permissions = permissionRepository.findAll();
+//
         Role role = new Role();
         role.setName("ADMIN");
         role.setStatus(1);
-        role.setPermissions(permissions);
         roleRepository.save(role);
-
-        Role role1 = new Role();
-        role.setName("USER");
-        role.setStatus(1);
-        role.setPermissions(permissions);
-        roleRepository.save(role1);
+//
+//        Role role1 = new Role();
+//        role.setName("USER");
+//        role.setStatus(1);
+//        role.setPermissions(permissions);
+//        roleRepository.save(role1);
     }
 }

@@ -51,7 +51,12 @@ public class User implements UserDetails {
     @OneToOne(mappedBy = "user")
     private RefreshToken refreshToken;
 
-    private String roles;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "role_user", joinColumns = {
+            @JoinColumn(name = "user_id", referencedColumnName = "id")
+    }, inverseJoinColumns = {
+            @JoinColumn(name = "role_id", referencedColumnName = "id")})
+    private List<Role> roles;
 
     private boolean isAccountNonExpired = true;
     private boolean isAccountNonLocked = true;
@@ -60,7 +65,15 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(roles));
+        Set<GrantedAuthority> authorities = new HashSet<>();
+        roles.forEach(r -> {
+            authorities.add(new SimpleGrantedAuthority(r.getName()));
+            r.getPermissions().forEach(p -> {
+                authorities.add(new SimpleGrantedAuthority(p.getName()));
+            });
+        });
+
+        return authorities;
     }
 
     @Override
