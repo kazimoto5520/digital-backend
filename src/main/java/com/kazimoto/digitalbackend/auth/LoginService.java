@@ -34,6 +34,10 @@ public class LoginService {
 
         List<Role> roles = roleRepository.findAllById(request.getRoleId());
 
+        if(roles.isEmpty()){
+            throw new IllegalArgumentException("Role(s) not found in database");
+        }
+
         var user = User.builder()
                 .email(request.getEmail())
                 .fullName(request.getFullName())

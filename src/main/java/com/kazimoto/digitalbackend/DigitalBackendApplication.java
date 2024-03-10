@@ -32,10 +32,10 @@ public class DigitalBackendApplication implements CommandLineRunner {
 //
 //        List<Permission> permissions = permissionRepository.findAll();
 //
-        Role role = new Role();
-        role.setName("ADMIN");
-        role.setStatus(1);
-        roleRepository.save(role);
+//        Role role = new Role();
+//        role.setName("ADMIN");
+//        role.setStatus(1);
+//        roleRepository.save(role);
 //
 //        Role role1 = new Role();
 //        role.setName("USER");

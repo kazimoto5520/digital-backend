@@ -24,7 +24,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 @Slf4j
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-//    private final UserDetailsService userDetailsService;
+    //    private final UserDetailsService userDetailsService;
     private final JwtService jwtService;
     private final CustomUserDetailsService userDetailsService;
 
@@ -35,7 +35,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String authHeader = request.getHeader(AUTHORIZATION);
         final String username;
         final String jwtToken;
-        log.info("Authorities authHeader: {}",authHeader);
+        log.info("Authorities authHeader: {}", authHeader);
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
@@ -44,17 +44,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         jwtToken = authHeader.substring(7);
         username = jwtService.extractUsername(jwtToken);
-        log.info("Authorities authHeader jwtToken: {}",jwtToken);
+        log.info("Authorities authHeader jwtToken: {}", jwtToken);
 
-        log.info("Authorities authHeader username: {}",username);
+        log.info("Authorities authHeader username: {}", username);
 
-        log.info("Authorities authHeader getAuthentication: {}", SecurityContextHolder.getContext().getAuthentication() );
+        log.info("Authorities authHeader getAuthentication: {}", SecurityContextHolder.getContext().getAuthentication());
 
 
-        if (username != null ) {
+        if (username != null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
-            log.info("Authorities authHeader userDetails: {}", userDetails );
+            log.info("Authorities authHeader userDetails: {}", userDetails);
 
             if (jwtService.isTokenValid(jwtToken, userDetails)) {
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
@@ -66,8 +66,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                         new WebAuthenticationDetailsSource().buildDetails(request)
                 );
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }else{
-                log.info("Authorities authHeader isTokenValid: no" );
+                log.info("Authorities authHeader getAuthentication 2: {}", SecurityContextHolder.getContext().getAuthentication());
+
+            } else {
+                log.info("Authorities authHeader isTokenValid: no");
             }
         }
 

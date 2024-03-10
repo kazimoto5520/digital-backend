@@ -15,6 +15,8 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -64,9 +66,14 @@ public class HomeController {
     }
 
 
-    @PreAuthorize("hasAuthority('VIEW_REGION')")
     @GetMapping("/regions/all")
-    public ResponseEntity<List<Region>> getAllRegions() {
+    @PreAuthorize("hasAuthority('HR')")
+    public ResponseEntity<List<Region>> getAllRegions(Authentication authentication) {
+        String collect = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(", "));
+
+        log.info("Result: {}", collect);
         List<Region> regions = regionService.getAllRegions();
         return ResponseEntity.ok(regions);
     }
