@@ -6,6 +6,7 @@ import com.kazimoto.digitalbackend.entity.User;
 import com.kazimoto.digitalbackend.repository.RoleRepository;
 import com.kazimoto.digitalbackend.repository.UserRepository;
 import com.kazimoto.digitalbackend.service.RefreshTokenService;
+import com.kazimoto.digitalbackend.service.otp.OtpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +29,7 @@ public class LoginService {
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
     private final RefreshTokenService refreshTokenService;
+    private final OtpService otpService;
 
 
     public AuthResponse register(RegisterRequest request){
@@ -52,11 +54,11 @@ public class LoginService {
 
         userRepository.save(user);
 
-        var jwtToken = jwtService.generateToken(user);
+//        var jwtToken = jwtService.generateToken(user);
         var refreshToken = refreshTokenService.createRefreshToken(user.getEmail());
 
         return AuthResponse.builder()
-                .accessToken(jwtToken)
+//                .accessToken(jwtToken)
                 .refreshToken(refreshToken.getRefreshToken())
                 .build();
     }
@@ -71,17 +73,18 @@ public class LoginService {
 
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow(() -> new RuntimeException("No user found by email " + request.getEmail()));
 
-        log.info("The user is {}", user);
-        log.info("Role: {}", user.getAuthorities());
 
         var token = jwtService.generateToken(user);
         var refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
 
+        String otp = otpService.generateOTP(user.getEmail());
+
         log.info("The token is {}", token);
 
         return AuthResponse.builder()
-                .accessToken(token)
-                .refreshToken(refreshToken.getRefreshToken())
+//                .accessToken(token)
+//                .refreshToken(refreshToken.getRefreshToken())
+                .otp(otp)
                 .build();
     }
 }

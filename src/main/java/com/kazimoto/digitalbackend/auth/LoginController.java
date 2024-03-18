@@ -3,7 +3,9 @@ package com.kazimoto.digitalbackend.auth;
 import com.kazimoto.digitalbackend.config.JwtService;
 import com.kazimoto.digitalbackend.entity.RefreshToken;
 import com.kazimoto.digitalbackend.entity.User;
+import com.kazimoto.digitalbackend.repository.UserRepository;
 import com.kazimoto.digitalbackend.service.RefreshTokenService;
+import com.kazimoto.digitalbackend.service.otp.OtpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,8 @@ public class LoginController {
     private final LoginService loginService;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
+    private final UserRepository userRepository;
+    private final OtpService otpService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody AuthRequest request, Authentication auth) {
@@ -59,5 +63,22 @@ public class LoginController {
                 .accessToken(accessToken)
                 .refreshToken(refreshToken.getRefreshToken())
                 .build());
+    }
+
+    @PostMapping("/verify-otp")
+    public ResponseEntity<?> verifyOtp(@RequestBody OtpRequest request) {
+
+        var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+
+        if (otpService.verifyOTP(user.getEmail(), request.getOtp())){
+            String token = jwtService.generateToken(user);
+            return ResponseEntity.ok(AuthResponse.builder()
+                    .accessToken(token)
+                    .build());
+        }else {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "INVALID OTP");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 }
