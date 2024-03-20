@@ -1,12 +1,14 @@
 package com.kazimoto.digitalbackend.controller;
 
-import com.kazimoto.digitalbackend.dto.DistrictDto;
-import com.kazimoto.digitalbackend.dto.DistrictResponseDto;
-import com.kazimoto.digitalbackend.dto.RegionDto;
+import com.kazimoto.digitalbackend.dto.*;
 import com.kazimoto.digitalbackend.entity.Company;
+import com.kazimoto.digitalbackend.entity.Order;
+import com.kazimoto.digitalbackend.entity.Product;
 import com.kazimoto.digitalbackend.entity.Region;
 import com.kazimoto.digitalbackend.service.company.CompanyService;
 import com.kazimoto.digitalbackend.service.district.DistrictService;
+import com.kazimoto.digitalbackend.service.order.OrderService;
+import com.kazimoto.digitalbackend.service.product.ProductService;
 import com.kazimoto.digitalbackend.service.region.RegionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +41,8 @@ public class HomeController {
     private final CompanyService companyService;
     private final RegionService regionService;
     private final DistrictService districtService;
+    private final ProductService productService;
+    private final OrderService orderService;
 
     @GetMapping("/companies/all")
     public ResponseEntity<List<Company>> getAllCompanies() {
@@ -218,6 +222,87 @@ public class HomeController {
             Map<String, String> errorResponse = new HashMap<>();
             errorResponse.put("error", "Error updating district: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
+    }
+
+
+//    Product
+
+    @GetMapping("/products/all")
+    public ResponseEntity<List<Product>> getAllProducts() {
+        List<Product> products = productService.getAllProducts();
+        return ResponseEntity.ok(products);
+    }
+
+    @PostMapping("/product")
+    public ResponseEntity<?> saveProduct(@Valid @RequestBody ProductDto productDto, BindingResult result) {
+        if (result.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError error : result.getFieldErrors()) {
+                errors.put(error.getField(), error.getDefaultMessage());
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        }
+
+        try {
+            Product savedProduct = productService.saveProduct(productDto);
+            return ResponseEntity.status(CREATED).body(savedProduct);
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("message", e.getMessage());
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
+
+    @GetMapping("/product/{id}")
+    public ResponseEntity<?> getSingleProduct(@PathVariable("id") String id) {
+        try {
+            Product product = productService.getSingleProduct(id);
+            return ResponseEntity.status(OK).body(product);
+        } catch (NoSuchElementException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(NOT_FOUND).body(response);
+        }
+    }
+
+//    Order
+
+    @GetMapping("/order/all")
+    public ResponseEntity<List<Order>> getAllOrder() {
+        List<Order> orders = orderService.getAllOrders();
+        return ResponseEntity.ok(orders);
+    }
+
+    @PostMapping("/order")
+    public ResponseEntity<?> saveOrder(@Valid @RequestBody OrderDto orderDto, BindingResult result) {
+        if (result.hasErrors()) {
+            Map<String, String> errors = new HashMap<>();
+            for (FieldError error : result.getFieldErrors()) {
+                errors.put(error.getField(), error.getDefaultMessage());
+            }
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+        }
+
+        try {
+            Order savedOrder = orderService.saveOrder(orderDto);
+            return ResponseEntity.status(CREATED).body(savedOrder);
+        } catch (Exception e) {
+            Map<String, String> error = new HashMap<>();
+            error.put("message", e.getMessage());
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(error);
+        }
+    }
+
+    @GetMapping("/order/{id}")
+    public ResponseEntity<?> getSingleOrder(@PathVariable("id") String id) {
+        try {
+            Order order = orderService.getSingleOrder(id);
+            return ResponseEntity.status(OK).body(order);
+        } catch (NoSuchElementException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("message", e.getMessage());
+            return ResponseEntity.status(NOT_FOUND).body(response);
         }
     }
 
