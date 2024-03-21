@@ -27,6 +27,9 @@ public class Product extends Auditable<String> implements Serializable {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "amount")
+    private Double amount;
+
     @Column(name = "status")
     private Integer status = 1;
 }

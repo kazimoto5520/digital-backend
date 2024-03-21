@@ -1,4 +1,4 @@
-package com.kazimoto.digitalbackend.dto;
+package com.kazimoto.digitalbackend.dto.order;
 
 import lombok.Getter;
 import lombok.Setter;

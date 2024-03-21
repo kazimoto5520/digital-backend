@@ -1,6 +1,8 @@
 package com.kazimoto.digitalbackend.controller;
 
 import com.kazimoto.digitalbackend.dto.*;
+import com.kazimoto.digitalbackend.dto.order.OrderDto;
+import com.kazimoto.digitalbackend.dto.order.OrderResponse;
 import com.kazimoto.digitalbackend.entity.Company;
 import com.kazimoto.digitalbackend.entity.Order;
 import com.kazimoto.digitalbackend.entity.Product;
@@ -10,6 +12,7 @@ import com.kazimoto.digitalbackend.service.district.DistrictService;
 import com.kazimoto.digitalbackend.service.order.OrderService;
 import com.kazimoto.digitalbackend.service.product.ProductService;
 import com.kazimoto.digitalbackend.service.region.RegionService;
+import com.kazimoto.digitalbackend.utils.JsonResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -285,8 +288,8 @@ public class HomeController {
         }
 
         try {
-            Order savedOrder = orderService.saveOrder(orderDto);
-            return ResponseEntity.status(CREATED).body(savedOrder);
+            JsonResponse response = orderService.saveOrder(orderDto);
+            return ResponseEntity.status(CREATED).body(response);
         } catch (Exception e) {
             Map<String, String> error = new HashMap<>();
             error.put("message", e.getMessage());
@@ -297,7 +300,7 @@ public class HomeController {
     @GetMapping("/order/{id}")
     public ResponseEntity<?> getSingleOrder(@PathVariable("id") String id) {
         try {
-            Order order = orderService.getSingleOrder(id);
+            OrderResponse order = orderService.getSingleOrder(id);
             return ResponseEntity.status(OK).body(order);
         } catch (NoSuchElementException e) {
             Map<String, String> response = new HashMap<>();

@@ -1,5 +1,6 @@
 package com.kazimoto.digitalbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.kazimoto.digitalbackend.helper.MaiString;
 import jakarta.persistence.*;
 import lombok.*;
@@ -24,8 +25,8 @@ public class Order extends Auditable<String> implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "amount")
-    private Double amount;
+    @Column(name = "total_amount")
+    private Double totalAmount;
 
     @Column(name = "quantity")
     private Integer quantity;
@@ -36,11 +37,13 @@ public class Order extends Auditable<String> implements Serializable {
     @Column(name = "shipping_address")
     private String shippingAddress;
 
-    @OneToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 

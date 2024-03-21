@@ -1,12 +1,14 @@
 package com.kazimoto.digitalbackend.service.order;
 
-import com.kazimoto.digitalbackend.dto.OrderDto;
+import com.kazimoto.digitalbackend.dto.order.OrderDto;
+import com.kazimoto.digitalbackend.dto.order.OrderResponse;
 import com.kazimoto.digitalbackend.entity.Order;
 import com.kazimoto.digitalbackend.entity.Product;
 import com.kazimoto.digitalbackend.entity.User;
 import com.kazimoto.digitalbackend.repository.OrderRepository;
 import com.kazimoto.digitalbackend.repository.ProductRepository;
 import com.kazimoto.digitalbackend.repository.UserRepository;
+import com.kazimoto.digitalbackend.utils.JsonResponse;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +31,7 @@ public class OrderService {
         return orderRepository.findAll();
     }
 
-    public Order saveOrder(OrderDto dto){
+    public JsonResponse saveOrder(OrderDto dto){
 
         Product product = productRepository.findByRowId(dto.getProductId()).orElseThrow();
         User user = userRepository.findById(Long.valueOf(dto.getUserId())).orElseThrow();
@@ -38,7 +40,7 @@ public class OrderService {
 
         order.setOrderName(dto.getOrderName());
         order.setDescription(dto.getDescription());
-        order.setAmount(dto.getAmount());
+        order.setTotalAmount(dto.getAmount() * dto.getQuantity());
         order.setQuantity(dto.getQuantity());
         order.setShippingAddress(dto.getShippingAddress());
 
@@ -48,12 +50,27 @@ public class OrderService {
         order.setProduct(product);
         order.setUser(user);
 
-        return orderRepository.save(order);
+         orderRepository.save(order);
+
+         return new JsonResponse("Order created successfully");
     }
 
-    public Order getSingleOrder(String rowId){
-        return orderRepository.findByRowId(rowId)
+    public OrderResponse getSingleOrder(String rowId){
+        Order order = orderRepository.findByRowId(rowId)
                 .orElseThrow(()-> new NoSuchElementException("No order with id: " + rowId));
+
+        return OrderResponse.builder()
+                .rowId(rowId)
+                .orderName(order.getOrderName())
+                .amount(order.getTotalAmount())
+                .description(order.getDescription())
+                .quantity(order.getQuantity())
+                .shippingAddress(order.getShippingAddress())
+                .lockNumber(order.getLockNumber())
+                .product(order.getProduct().getProductName())
+                .user(order.getUser().getUsername())
+                .status(order.getStatus())
+                .build();
     }
 
     public String generateLockNumber(){
