@@ -4,7 +4,7 @@ import com.kazimoto.digitalbackend.config.JwtService;
 import com.kazimoto.digitalbackend.entity.RefreshToken;
 import com.kazimoto.digitalbackend.entity.User;
 import com.kazimoto.digitalbackend.repository.UserRepository;
-import com.kazimoto.digitalbackend.service.RefreshTokenService;
+//import com.kazimoto.digitalbackend.service.RefreshTokenService;
 import com.kazimoto.digitalbackend.service.otp.OtpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ public class LoginController {
 
     private final LoginService loginService;
     private final JwtService jwtService;
-    private final RefreshTokenService refreshTokenService;
+//    private final RefreshTokenService refreshTokenService;
     private final UserRepository userRepository;
     private final OtpService otpService;
 
@@ -53,17 +53,17 @@ public class LoginController {
         }
     }
 
-    @PostMapping("/refresh")
-    public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
-        RefreshToken refreshToken = refreshTokenService.verifyRefreshToken(request.getRefreshToken());
-        User user = refreshToken.getUser();
-
-        String accessToken = jwtService.generateToken(user);
-        return ResponseEntity.ok(AuthResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken.getRefreshToken())
-                .build());
-    }
+//    @PostMapping("/refresh")
+//    public ResponseEntity<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+//        RefreshToken refreshToken = refreshTokenService.verifyRefreshToken(request.getRefreshToken());
+//        User user = refreshToken.getUser();
+//
+//        String accessToken = jwtService.generateToken(user);
+//        return ResponseEntity.ok(AuthResponse.builder()
+//                .accessToken(accessToken)
+//                .refreshToken(refreshToken.getRefreshToken())
+//                .build());
+//    }
 
     @PostMapping("/verify-otp")
     public ResponseEntity<?> verifyOtp(@RequestBody OtpRequest request) {

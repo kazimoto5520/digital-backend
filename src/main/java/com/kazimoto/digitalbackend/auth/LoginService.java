@@ -5,7 +5,7 @@ import com.kazimoto.digitalbackend.entity.Role;
 import com.kazimoto.digitalbackend.entity.User;
 import com.kazimoto.digitalbackend.repository.RoleRepository;
 import com.kazimoto.digitalbackend.repository.UserRepository;
-import com.kazimoto.digitalbackend.service.RefreshTokenService;
+//import com.kazimoto.digitalbackend.service.RefreshTokenService;
 import com.kazimoto.digitalbackend.service.otp.OtpService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class LoginService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final RoleRepository roleRepository;
-    private final RefreshTokenService refreshTokenService;
+//    private final RefreshTokenService refreshTokenService;
     private final OtpService otpService;
 
 
@@ -55,11 +55,11 @@ public class LoginService {
         userRepository.save(user);
 
 //        var jwtToken = jwtService.generateToken(user);
-        var refreshToken = refreshTokenService.createRefreshToken(user.getEmail());
+//        var refreshToken = refreshTokenService.createRefreshToken(user.getEmail());
 
         return AuthResponse.builder()
 //                .accessToken(jwtToken)
-                .refreshToken(refreshToken.getRefreshToken())
+//                .refreshToken(refreshToken.getRefreshToken())
                 .build();
     }
 
@@ -75,7 +75,7 @@ public class LoginService {
 
 
         var token = jwtService.generateToken(user);
-        var refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
+//        var refreshToken = refreshTokenService.createRefreshToken(request.getEmail());
 
         String otp = otpService.generateOTP(user.getEmail());
 

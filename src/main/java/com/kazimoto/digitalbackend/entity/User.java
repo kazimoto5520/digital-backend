@@ -1,5 +1,7 @@
 package com.kazimoto.digitalbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kazimoto.digitalbackend.helper.MaiString;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -51,8 +53,8 @@ public class User extends Auditable<String> implements UserDetails, Serializable
     @Column(name = "status")
     private Integer status = 1;
 
-    @OneToOne(mappedBy = "user")
-    private RefreshToken refreshToken;
+
+//    private RefreshToken refreshToken;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "role_user", joinColumns = {
@@ -60,6 +62,7 @@ public class User extends Auditable<String> implements UserDetails, Serializable
     }, inverseJoinColumns = {
             @JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles;
+
 
     private boolean isAccountNonExpired = true;
     private boolean isAccountNonLocked = true;

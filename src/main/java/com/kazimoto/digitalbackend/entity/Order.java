@@ -1,6 +1,8 @@
 package com.kazimoto.digitalbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kazimoto.digitalbackend.helper.MaiString;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,17 +39,14 @@ public class Order extends Auditable<String> implements Serializable {
     @Column(name = "shipping_address")
     private String shippingAddress;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
 
     @Column(name = "status")
     private Integer status = 1;
-
 }

@@ -1,12 +1,12 @@
 package com.kazimoto.digitalbackend.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.kazimoto.digitalbackend.helper.MaiString;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 @Getter
@@ -32,4 +32,6 @@ public class Product extends Auditable<String> implements Serializable {
 
     @Column(name = "status")
     private Integer status = 1;
+
+
 }

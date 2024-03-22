@@ -68,7 +68,7 @@ public class OrderService {
                 .shippingAddress(order.getShippingAddress())
                 .lockNumber(order.getLockNumber())
                 .product(order.getProduct().getProductName())
-                .user(order.getUser().getUsername())
+                .user(order.getUser().getFullName())
                 .status(order.getStatus())
                 .build();
     }
